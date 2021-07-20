@@ -364,8 +364,3 @@ I will only watch. Do not want to pay for Google Clouds.
 ---
 
 <br/>
-
-**Marley**
-
-Any questions in eng: https://jsdev.org/chat/  
-Любые вопросы на русском: https://jsdev.ru/chat/
