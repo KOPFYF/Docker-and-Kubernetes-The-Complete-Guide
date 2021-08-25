@@ -2,23 +2,25 @@ version: "3"
 services:
   postgres:
     image: "postgres:latest"
+    environment:
+      - POSTGRES_PASSWORD=postgres_password # updated 6-12-2020
   redis:
     image: "redis:latest"
   nginx:
-    restart: always
+    restart: always # if other crashes, still work
     build:
       dockerfile: Dockerfile.dev
       context: ./nginx
-    ports:
-      - "8080:80"
-  api:
+    ports: # local host
+      - "3000:80"
+  api: # express server
     build:
-      dockerfile: Dockerfile.dev
-      context: ./server
+      dockerfile: Dockerfile.dev # just the file, no folder needed
+      context: ./server # clarify the folder
     volumes:
-      - /app/node_modules
-      - ./server:/app
-    environment:
+      - /app/node_modules # create the app folder, dont overwrite this!
+      - ./server:/app # copy server folder into app folder
+    environment: # keys.js in server, variableName=value
       - REDIS_HOST=redis
       - REDIS_PORT=6379
       - PGUSER=postgres
@@ -26,7 +28,8 @@ services:
       - PGDATABASE=postgres
       - PGPASSWORD=postgres_password
       - PGPORT=5432
-  client:
+  client: # react server
+    stdin_open: true # otherwise, "React App exited with Code 0" error
     build:
       dockerfile: Dockerfile.dev
       context: ./client
@@ -34,12 +37,12 @@ services:
       - /app/node_modules
       - ./client:/app
   worker:
-    environment:
-      - REDIS_HOST=redis
-      - REDIS_PORT=6379
     build:
       dockerfile: Dockerfile.dev
       context: ./worker
     volumes:
       - /app/node_modules
       - ./worker:/app
+    environment:
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
