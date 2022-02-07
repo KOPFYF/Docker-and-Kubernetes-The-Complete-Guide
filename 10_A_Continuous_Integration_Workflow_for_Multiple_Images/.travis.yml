@@ -3,22 +3,24 @@ services:
   - docker
 
 before_install:
-  - docker build -t marley/react-test -f ./client/Dockerfile.dev ./client
+  - docker build -t kopfyf/react-test -f ./client/Dockerfile.dev ./client
+  # - docker build myotherproj
 
 script:
-  - docker run marley/react-test npm test -- --coverage
+  # - docker run kopfyf/react-test npm test -- --coverage # old
+  - docker run -e CI=true kopfyf/react-test npm test
 
 after_success:
-  - docker build -t marley/multi-client ./client
-  - docker build -t marley/multi-nginx ./nginx
-  - docker build -t marley/multi-server ./server
-  - docker build -t marley/multi-worker ./worker
+  - docker build -t kopfyf/multi-client ./client
+  - docker build -t kopfyf/multi-nginx ./nginx
+  - docker build -t kopfyf/multi-server ./server
+  - docker build -t kopfyf/multi-worker ./worker
 
-  # Log in to the docker CLI
+  # Log in to the docker CLI (set those vars in Travis CI)
   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
 
   # Take those images and push them to docker hub
-  - docker push marley/multi-client
-  - docker push marley/multi-nginx
-  - docker push marley/multi-server
-  - docker push marley/multi-worker
+  - docker push kopfyf/multi-client
+  - docker push kopfyf/multi-nginx
+  - docker push kopfyf/multi-server
+  - docker push kopfyf/multi-worker

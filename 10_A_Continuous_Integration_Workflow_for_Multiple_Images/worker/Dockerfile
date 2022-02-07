@@ -3,4 +3,5 @@ WORKDIR /app
 COPY ./package.json ./
 RUN npm install
 COPY . .
-CMD ["npm", "run", "start"]
+CMD ["npm", "run", "start"] 
+# rather than 'dev', use 'start'
